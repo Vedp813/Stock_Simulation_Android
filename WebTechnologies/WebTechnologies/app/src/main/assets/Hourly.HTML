@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highcharts Chart</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+
+<div id="myChartSummary" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script>
+    let trend = 1;
+    const ticker = CDataHelper.getTicker();
+    const chartFunction = async (ticker) => {
+        try {
+            const response = await fetch(`https://assignment3-webtech-csci571.wl.r.appspot.com/charts/summary/${ticker}`);
+            if (!response.ok) {
+                throw new Error('Ticker not found.');
+            }
+            const jsonData = await response.json();
+            drawChart(jsonData);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    function drawChart(chartData) {
+        try {
+            console.log('this is chart data', chartData);
+            if (chartData === null || !chartData.results || chartData.results.length === 0) {
+                console.error('No data available to draw the chart.');
+                return;
+            } else {
+                const prices = [];
+                const dates = [];
+                for (let i = 0; i < chartData.results.length; i++) {
+                    const item = chartData.results[i];
+                    prices.push(item.c);
+                    dates.push(item.t);
+                }
+
+                const priceData = [];
+                for (let i = 0; i < dates.length; i++) {
+                    priceData.push([dates[i], prices[i]]);
+                }
+
+                Highcharts.chart('myChartSummary', {
+                    chart: {
+                        type: 'line',
+                    },
+                    title: {
+                        text: `<span style="color: #ccc; font-size: 18px">${chartData.ticker} Hourly Price Valuation</span>`
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        dateTimeLabelFormats: {
+                            hour: '%H:%M'
+                        }
+                    },
+                    yAxis: [{
+                        title: {
+                            text: ''
+                        },
+                    }, {
+                        title: {
+                            text: ''
+                        },
+                        opposite: true
+                    }],
+                    legend: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return `<span style="color:${this.series.color}">\u25CF</span> ${chartData.ticker}: ${this.y}`;
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            marker: {
+                                enabled: false
+                            },
+                            color: trend > 0 ? '#90ed7d' : '#f15c80' // Ensure 'trend' is defined somewhere
+                        }
+                    },
+                    series: [{
+                        name: 'Price',
+                        data: priceData,
+                        yAxis: 1
+                    }]
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Call chartFunction with your ticker to fetch data and draw the chart
+    // For example:
+    chartFunction(ticker);
+
+</script>
+</body>
+</html>

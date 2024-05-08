@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="12dp"
+    android:elevation="4dp"
+    android:padding="16dp">
+    <TextView
+        android:id="@+id/text_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Text in the center"
+        android:textSize="20sp" />
+
+    <!-- Horizontal linear layout -->
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_center"
+        android:orientation="horizontal">
+
+        <!-- Input field -->
+        <EditText
+            android:id="@+id/input_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="0"
+            android:inputType="numberDecimal" />
+
+        <!-- Space -->
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="wrap_content" />
+
+        <!-- Textview with shares -->
+        <TextView
+            android:id="@+id/text_shares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shares"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- Text calculating number * current price -->
+    <TextView
+        android:id="@+id/text_calculation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Number * Current Price = "
+        android:textSize="18sp" />
+
+    <!-- Some text -->
+    <TextView
+        android:id="@+id/text_some_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_calculation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Some Text"
+        android:textSize="16sp" />
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:id="@+id/buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_some_text"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button 1" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button 2" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

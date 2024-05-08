@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highcharts Chart</title>
+    <!-- Include React and ReactDOM -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Include Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- Include Highcharts React wrapper -->
+    <script src="https://unpkg.com/highcharts-react-official@3"></script>
+</head>
+
+<body>
+
+<div id="myChartSummary" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script type="text/javascript">
+    // Define your EPSChart React component
+    const ticker = "AAPL";
+    const chartFunction = async (ticker) => {
+      try {
+        const response = await fetch(`https://assignment3-webtech-csci571.wl.r.appspot.com/search/${ticker}`);
+        if (!response.ok) {
+          throw new Error('Ticker not found.');
+        }
+        const jsonData = await response.json();
+        console.log('API Response:', jsonData); // Log the API response
+        const data = jsonData['6']; // Access data using correct key
+        if (!data || !Array.isArray(data)) {
+          throw new Error('Data for chart is not in the expected format.');
+        }
+        console.log('This is Strong Data', data);
+        EPSChart(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+
+    function EPSChart( data ) {
+        var estimate = [];
+        var actual = [];
+        var time = [];
+        var surprise = [];
+        console.log(data)
+        data.map((earn) => {
+          if (earn.estimate == null) {
+            estimate.push(0);
+          } else {
+            estimate.push(earn.estimate);
+          }
+          actual.push(earn.actual);
+          time.push(earn.period + "<br>" + "Surprise: " + earn.surprise);
+        });
+
+        Highcharts.chart('myChartSummary', {
+          chart: {
+            type: 'line',
+            backgroundColor: '#Ccc',
+          },
+          title: {
+            text: 'Historical EPS Surprises'
+          },
+          yAxis: {
+            min: 0,
+            tickAmount: 8,
+            title: {
+              text: 'Quarterly EPS'
+            },
+            plotLines: [{
+              value: 0,
+              width: 2,
+              color: 'black',
+              zIndex: 5
+            }],
+          },
+          tooltip: {
+            shared: true
+          },
+          xAxis: {
+            categories: time,
+          },
+          plotOptions: {},
+          legend: {
+            verticalAlign: 'bottom'
+          },
+          series: [{
+            name: 'Actual',
+            type: 'line',
+            color: '#6AA0C9',
+            data: actual
+          }, {
+            name: 'Estimate',
+            type: 'line',
+            color: '#534D95',
+            data: estimate
+          }],
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 300
+              },
+              chartOptions: {
+                legend: {
+                  layout: 'horizontal',
+                  align: 'center',
+                  verticalAlign: 'bottom'
+                }
+              }
+            }]
+          },
+        });
+      }
+
+    chartFunction(ticker);
+</script>
+
+
+</body>
+
+</html>
